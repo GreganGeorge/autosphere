@@ -11,6 +11,7 @@ const MechanicProfile = () => {
     const [address,setAddress]=useState('');
     const [about,setAbout]=useState('');
     const [availability,setAvailability]=useState('');
+    const [count,setCount]=useState([]);
     const getLocation = () => {
         if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -65,6 +66,18 @@ const MechanicProfile = () => {
           console.error('Error fetching data:', error);
         }
     }
+    const getCount=async()=>{
+        const value=localStorage.getItem('login');
+        const id=localStorage.getItem('login_id');
+        const url = `http://localhost:5059/api/User/Get7?id=${id}&value=${value}`;
+        try {
+          const response = await fetch(url);
+          const data = await response.json();
+          setCount(data);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+    }
     const update=()=>{
         const id = localStorage.getItem('login_id');
         fetch(`http://localhost:5059/api/User/Put1?id=${id}&username=${name}&phone_number=${number}&latitude=${latitude}&longitude=${longitude}&place=${placeName}&addr=${address}&about=${about}&availability=${availability}`,{
@@ -95,6 +108,7 @@ const MechanicProfile = () => {
     }
     useEffect(()=>{
         getData();
+        getCount();
     },[])
   return (
     <div className='flex justify-center items-center mt-40 mb-60'>
@@ -155,6 +169,10 @@ const MechanicProfile = () => {
                     className="mt-1 block w-full px-3 py-2 border bg-gray-100 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                     onChange={(e)=>setAbout(e.target.value)}
                 />
+            </div>
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Answer Upvotes Received</label>
+                <p className="mt-1 text-lg text-gray-900">{count[0]?.count}</p>
             </div>
             <button
                 className="w-full px-4 py-2 text-base font-medium text-white bg-green-600 rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"

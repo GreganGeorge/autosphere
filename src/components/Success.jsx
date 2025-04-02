@@ -2,9 +2,13 @@ import React, { useEffect,useState } from 'react'
 import { Link } from 'react-router-dom';
 import {runFireworks} from './Utils.jsx'
 import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useCart } from './CartContext';
 
 const Success = () => {
     const status=localStorage.getItem("status");
+    const login_id=localStorage.getItem('login_id');
+    const {getCount}=useCart();
     const [bookingDetails, setBookingDetails] = useState(null);
     const [currentDate, setCurrentDate] = useState("");
     const [currentTime, setCurrentTime] = useState("");
@@ -22,6 +26,20 @@ const Success = () => {
         }
         if(status==='servicer'){
             const storedDetails = JSON.parse(localStorage.getItem("servicerBookingDetails"));
+            if (storedDetails) {
+                setBookingDetails(storedDetails);
+            }
+        }
+        if(status==='product'){
+            const storedDetails = JSON.parse(localStorage.getItem("productBookingDetails"));
+            if (storedDetails) {
+                setBookingDetails(storedDetails);
+                const now = new Date();
+                setCurrentDate(now.toISOString().split("T")[0]);
+            }
+        }
+        if(status==='carrental'){
+            const storedDetails = JSON.parse(localStorage.getItem("carBookingDetails"));
             if (storedDetails) {
                 setBookingDetails(storedDetails);
             }
@@ -97,6 +115,70 @@ const Success = () => {
                 console.error("Error saving booking details:", error);
             }
         }
+        else if(bookingDetails && status==='product'){
+            try {
+                const payload = bookingDetails.map((item)=>({
+                    userid:parseInt(login_id),
+                    sparepart_id: item.sparepart_id,
+                    title:item.title,
+                    brand: item.brand,
+                    image_url: item.image_url,
+                    price: item.price,
+                    quantity:item.quantity,
+                    date: currentDate
+                }));
+                const response = await axios.post(
+                    "http://localhost:5059/api/SpareParts/Post5",
+                    payload,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+                console.log("Booking saved successfully:", response.data);
+                fetch(`http://localhost:5059/api/SpareParts/Delete2?id=${login_id}`,{
+                    method:'DELETE',
+                    headers:{
+                        'Accept':'application/json',
+                        'Content-Type':'application/json'
+                    },
+                    })
+                    .then(res=>res.json())
+                    .then((result)=>{
+                        console.log(result);
+                        getCount();
+                    },(error)=>{
+                        toast.error('Failed');
+                    })
+            } catch (error) {
+                console.error("Error saving booking details:", error);
+            }
+        }
+        else if(bookingDetails && status==='carrental'){
+            try {
+                const payload = bookingDetails.map((item)=>({
+                    userid:item.login_id,
+                    id: item.id,
+                    place:item.place,
+                    toSelectedDate: item.toSelectedDate,
+                    fromSelectedDate: item.fromSelectedDate,
+                    amount: item.amount
+                }));
+                const response = await axios.post(
+                    "http://localhost:5059/api/CarRental/Post4",
+                    payload,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+                console.log("Booking saved successfully:", response.data);
+            } catch (error) {
+                console.error("Error saving booking details:", error);
+            }
+        }
     };
 
     useEffect(() => {
@@ -107,14 +189,26 @@ const Success = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <div className="bg-white p-20 rounded-lg shadow-lg text-center">
-            <h2 className="text-3xl font-bold text-blue-900 mb-4">Thank you for your booking!</h2>
+            {status==='mechanic' || status==='servicer' || status==='carrental'?
+            <h2 className="text-3xl font-bold text-blue-900 mb-4">Thank you for your booking!</h2>:
+            <h2 className="text-3xl font-bold text-blue-900 mb-4">Thank you for ordering!</h2>}
             <Link to="/profile">
-            <button
+            {status==='mechanic' || status==='servicer'?<button
                 type="button"
                 className="w-64 py-3 mt-2 bg-green-600 text-white text-lg rounded-lg hover:bg-green-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
             >
                 Check Booking
-            </button>
+            </button>:status==='carrental'?<button
+                type="button"
+                className="w-64 py-3 mt-2 bg-green-600 text-white text-lg rounded-lg hover:bg-green-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+                Review Booking and Hire a Driver if Needed
+            </button>:<button
+                type="button"
+                className="w-64 py-3 mt-2 bg-green-600 text-white text-lg rounded-lg hover:bg-green-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-green-400"
+            >
+                Check Orders
+            </button>}
             </Link>
         </div>
     </div>

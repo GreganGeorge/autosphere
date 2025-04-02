@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
+import car from '../assets/pngegg.png';
 
 const PricePrediction = () => {
     const [formData, setFormData] = useState({
@@ -68,7 +69,11 @@ const PricePrediction = () => {
 
     return (
         <div className='mt-40 max-w-[800px] mx-auto'>
-            <h1 className="text-4xl font-semibold mb-10 text-center">Used Car Price Prediction</h1>
+            <div className='text-4xl mb-10 mt-5 border-b p-3 text-center flex gap-2 justify-center items-center'>
+                <p className='text-gray-700 font-medium'>USED CAR PRICE PREDICTION</p>
+                <p className='w-8 sm:w-12 h-[1px] sm:h-[2px] bg-gray-700'></p>
+            </div>
+            <img src={car} height={420} width={420} className='ml-40 mb-2 hover:scale-105 transition ease-in-out duration-300'/>
             <div className="mb-4">
                 <label htmlFor="brand" className="block text-sm font-medium text-gray-700">Brand</label>
                 <Select

@@ -15,7 +15,7 @@ const CarWashSearch = () => {
     const [visibleCount, setVisibleCount] = useState(5);
     const [selectedRating,setSelectedRating]=useState([]);
     const handleSelectedRating=(rating)=>{
-      setSelectedRating((prev)=>prev.includes(rating)?prev.filter((r)=>r!=rating):[...prev,rating]);
+      setSelectedRating((prev)=>prev.includes(rating)?prev.filter((r)=>r!==rating):[...prev,rating]);
     }
     const showMore = () => {
         setVisibleCount((prev) => Math.min(prev + 5, services.length));
@@ -83,19 +83,16 @@ const CarWashSearch = () => {
             place: place,
             selectedRating: selectedRating              
         };
-    
         try {
             const response = await fetch("http://localhost:5059/api/CarWash/Search", {
                 method: "POST", 
                 headers: {
                     "Content-Type": "application/json", 
                 },
-                body: JSON.stringify(requestBody), 
+                body: JSON.stringify(requestBody),
             });
-    
             if (response.ok) {
                 const data = await response.json();
-                console.log(data)
                 setFilteredData(data); 
             } else {
                 console.error('Error:', response.statusText);
@@ -115,9 +112,10 @@ const CarWashSearch = () => {
   return (
     <div className='flex flex-col mt-28 mb-60'>
         <div className='mb-12 flex flex-col items-center'>
-            <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5 text-center mb-12'>
-            Car Wash Servicers
-            </h1>
+            <div className='text-4xl mb-12 mt-5 border-b p-3 text-center flex gap-2 justify-center items-center'>
+                <p className='text-gray-700'>CAR WASH <span className='text-gray-700 font-medium'>SERVICERS</span></p>
+                <p className='w-8 sm:w-12 h-[1px] sm:h-[2px] bg-gray-700'></p>
+            </div>
             <label className='text-lg font-semibold mb-4'>
             Please specify the location where you require the car wash service:
             </label>
@@ -134,12 +132,13 @@ const CarWashSearch = () => {
             </button>
         </div>
     </div>
+  <p className='my-2 text-xl px-2 flex items-center cursor-pointer gap-2'>FILTERS</p>
   <div className='flex flex-col md:flex-row'>
-      <div className='p-7 border-t-2 border-b-2 md:border-r-2 md:min-h-screen'>
+      <div className='p-6 border-t-2 border-b-2 md:border-r-2 md:min-h-screen'>
       <form className='flex flex-col gap-8'>
           <div className='flex items-center gap-2'>
             <label className='whitespace-nowrap font-semibold'>
-              Name:
+              Name
             </label>
             <input
               type='text'
@@ -152,7 +151,7 @@ const CarWashSearch = () => {
           </div>
           <div className='flex items-center gap-2'>
             <label className='whitespace-nowrap font-semibold'>
-              Place:
+              Place
             </label>
             <input
               type='text'
@@ -164,7 +163,7 @@ const CarWashSearch = () => {
             />
           </div>
           <div className='flex flex-col gap-2 flex-wrap'>
-          <label className="font-semibold">Types:</label>
+          <label className="font-semibold">Types</label>
             <div className="flex flex-col gap-1">
                 {services.slice(0, visibleCount).map((service, index) => (
                 <div key={index} className="flex items-center gap-1">
@@ -189,7 +188,7 @@ const CarWashSearch = () => {
                 Show More
                 </button>
             )}
-            <label className="font-semibold mt-2">Ratings:</label>
+            <label className="font-semibold mt-2">Ratings</label>
             <div className="flex flex-col gap-1">
               {[4,3].map((rating)=>(
                 <div className="flex items-center gap-x-2">

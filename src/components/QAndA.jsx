@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import { MdEdit } from "react-icons/md";
 import Swal from 'sweetalert2'
 import { BiUpvote } from "react-icons/bi";
+import { BiSolidUpvote } from "react-icons/bi";
 
 const QAndA = () => {
   const [open,setOpen]=useState(false);
@@ -24,6 +25,7 @@ const QAndA = () => {
   const [editQuesId,setEditQuesId]=useState();
   const [editQues,setEditQues]=useState('');
   const [editDesc,setEditDesc]=useState('');
+  const [upvotes,setUpvotes]=useState([]);
   const id=localStorage.getItem('login_id');
   const name=localStorage.getItem('login');
   const handleDialog=()=>{
@@ -79,6 +81,51 @@ const QAndA = () => {
             console.error('Error fetching data:', error);
         }
   }
+  const getUpvotes=async()=>{
+    const url=`http://localhost:5059/api/Question/Get2`;
+        try{
+            const response=await fetch(url);
+            const data=await response.json();
+            setUpvotes(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+  }
+  const handleUpvote=(val,answer_id)=>{
+    if(val==='upvote'){
+      fetch(`http://localhost:5059/api/Question/Post2?answer_id=${answer_id}&id=${id}&name=${name}`,{
+        method:'POST',
+        headers:{
+            'Accept':'application/json',
+            'Content-Type':'application/json'
+        },
+    })
+    .then(res=>res.json())
+    .then((result)=>{
+        console.log("Upvoted!");
+        getUpvotes();
+        getAnswerData(questionId);
+    },(error)=>{
+        console.log("Error");
+    })}
+    else if(val==='upvoted'){
+      fetch(`http://localhost:5059/api/Question/Delete2?answer_id=${answer_id}&id=${id}&name=${name}`,{
+        method:'DELETE',
+        headers:{
+            'Accept':'application/json',
+            'Content-Type':'application/json'
+        },
+        })
+        .then(res=>res.json())
+        .then((result)=>{
+            console.log("Removed!");
+            getUpvotes();
+            getAnswerData(questionId);
+        },(error)=>{
+            console.log('Failed');
+        })
+    }
+  }
   const getAnswerData=async(id)=>{
     if(id){
       const url=`http://localhost:5059/api/Question/Get1?id=${id}`;
@@ -108,6 +155,7 @@ const QAndA = () => {
         toast.success("Answer Added");
         getAnswerData(questionId);
         setAnswer('');
+        getData();
     },(error)=>{
         toast.error("Error");
     })
@@ -223,6 +271,7 @@ const QAndA = () => {
   })}
   useEffect(()=>{
     getData();
+    getUpvotes();
   },[])
   return (
     <div className='mt-48 mb-60'>
@@ -236,8 +285,8 @@ const QAndA = () => {
                     placeholder="Search Questions"
                 />
             </div>
-            <button onClick={handleDialog} className="absolute top-0 mt-40 left-0 ml-20 mb-4 text-[18px] rounded-full bg-white text-green-800 hover:bg-green-600
-               hover:text-white py-2 px-10 transition-colors duration-300 shadow-md">Post Question</button>
+            {name==='User' && <button onClick={handleDialog} className="absolute top-0 mt-40 left-0 ml-20 mb-4 text-[18px] rounded-full bg-white text-green-800 hover:bg-green-600
+               hover:text-white py-2 px-10 transition-colors duration-300 shadow-md">Post Question</button>}
             <Dialog open={open} onClose={handleDialog} maxWidth="md" fullWidth>
                     <DialogTitle className='flex justify-center text-black'>Post Question</DialogTitle>
                     <DialogContent>
@@ -267,9 +316,11 @@ const QAndA = () => {
                     {question.question_id===editQuesId?(<div><input type="text" placeholder="Enter question..." value={editQues} onChange={(e)=>setEditQues(e.target.value)} className="border p-1 mt-1 w-full rounded-md focus:outline-none"/>
                   <textarea rows={4} type="text" placeholder="Enter description..." value={editDesc} onChange={(e)=>setEditDesc(e.target.value)} className="border p-1 mt-1 w-full rounded-md focus:outline-none"></textarea></div>):(<div><p className="mt-1 text-lg text-gray-800 font-semibold">{question.question}</p>
                   <p className="text-lg text-gray-800 font-medium">{question.description}</p></div>)}
-                    <MdQuestionAnswer onClick={()=>handleAnswerDialog(question.question_id)} className='text-green-700 h-5 w-5 mt-2 cursor-pointer'/>
+                  <div className='flex items-center gap-1 mt-2'>
+                    <MdQuestionAnswer onClick={()=>handleAnswerDialog(question.question_id)} className='text-green-700 h-5 w-5 cursor-pointer'/><span className='text-green-800'>{question.answer_count}</span>
                   </div>
-                  {question.user_id===parseInt(id) && <div className='flex items-center justify-end'>
+                  </div>
+                  {(question.user_id===parseInt(id) && name==='User') && <div className='flex items-center justify-end'>
                     {editQuesId===question.question_id?(<button onClick={()=>updateQuestion(question.question_id)} className='text-green-600 font-semibold ml-2'>Save</button>):
                     <MdEdit onClick={()=>{setEditQuesId(question.question_id);setEditQues(question.question);setEditDesc(question.description);}} className='text-blue-600 w-5 h-5 cursor-pointer'/>}
                     <MdDelete onClick={()=>deleteQuestion(question.question_id)} className='text-red-600 w-5 h-5 cursor-pointer'/>
@@ -288,10 +339,12 @@ const QAndA = () => {
                                 <span className="text-gray-500 ml-2">({answer.name==='User'?'user':'mechanic'})</span>
                               </p>
                               {editId===answer.answer_id?(<input type="text" value={editAns} onChange={(e)=>setEditAns(e.target.value)} className="border p-1 mt-1 w-full rounded-md focus:outline-none"/>):
-                              <p className="text-gray-800 text-base">{answer.answer}</p>}
-                              {(answer.id!==parseInt(id) || answer.name!==name) && (<div className='flex items-center border rounded-xl p-1 w-max mt-2 bg-gray-50'>
-                                <BiUpvote className='text-blue-600 w-5 h-5 cursor-pointer'/>
-                              </div>)}
+                              <p className="text-gray-800 text-[17px]">{answer.answer}</p>}
+                              {(answer.id!==parseInt(id) || answer.name!==name) ? (!upvotes.some(upvote=>upvote.id===parseInt(id) && upvote.name===name && upvote.answer_id===answer.answer_id) ? (<div className='flex items-center border rounded-xl p-1 w-max mt-2 bg-gray-50 gap-2'>
+                                <BiUpvote onClick={()=>handleUpvote("upvote",answer.answer_id)} className='text-blue-600 w-5 h-5 cursor-pointer'/>
+                              {answer.upvote_count}</div>):(<div className="flex items-center border rounded-xl p-1 w-max mt-2 bg-gray-50 gap-2">
+                                <BiSolidUpvote onClick={()=>handleUpvote("upvoted",answer.answer_id)} className="text-blue-600 w-5 h-5 cursor-pointer" /> <span className='text-blue-600'>{answer.upvote_count}</span></div>)):(<div className="flex items-center border rounded-xl p-1 w-max mt-2 bg-gray-50 gap-2">
+                                  <BiUpvote className="text-gray-400 w-5 h-5" /> <span className='text-gray-600'>{answer.upvote_count}</span></div>)}
                             </div>
                             {(answer.id===parseInt(id) && answer.name===name) && <div className='flex items-center justify-end'>
                               {editId===answer.answer_id?(<button onClick={()=>updateAnswer(answer.answer_id)} className='text-green-600 font-semibold ml-2'>Save</button>):

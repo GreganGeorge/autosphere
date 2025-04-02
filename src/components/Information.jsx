@@ -4,11 +4,12 @@ import { MdLocalCarWash } from "react-icons/md";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdOutlinePriceChange } from "react-icons/md";
 import { MdCarRental } from "react-icons/md";
-import { motion, useScroll } from 'framer-motion';
+import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import img1 from '../assets/smiling-auto-mechanic-with-wrench-standing-hands-folded-white-background.png';
 import img2 from '../assets/front-view-male-worker-uniform-carrying-suitcase-with-tools-white-wall.png';
 import img3 from '../assets/pngwing.com (3).png';
+import Recommendation from './Recommendation';
 
 const data=[
     {
@@ -150,6 +151,7 @@ const Information = ({setActive}) => {
                 </motion.div></a>
             ))}
         </div>
+        <Recommendation/>
         {data.map((value)=>(
             <div>
             <h1 className='flex justify-center text-5xl font-bold text-left pb-10 mt-20'>{value.text}</h1>

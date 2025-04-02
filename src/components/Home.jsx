@@ -3,6 +3,7 @@ import Carousel from './Carousel'
 import Information from './Information'
 import MechanicHome from './MechanicHome';
 import CarWashHome from './CarWashHome';
+import DriverHome from './DriverHome';
 
 const Home = ({setActive}) => {
     const name = localStorage.getItem('login');
@@ -12,6 +13,7 @@ const Home = ({setActive}) => {
         {(name==='User' || name===null)&&<Information setActive={setActive}/>}
         {(name==='Mechanic') && <MechanicHome/>}
         {(name==='Car Wash Servicer') && <CarWashHome/>}
+        {(name==='Driver') && <DriverHome/>}
     </div>
   )
 }

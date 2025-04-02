@@ -16,11 +16,21 @@ import CarWashSearch from "./components/CarWashSearch";
 import CarWashProfile from "./components/CarWashProfile";
 import CarWashDetails from "./components/CarWashDetails";
 import QAndA from "./components/QAndA";
+import SpareParts from "./components/SpareParts";
+import SparePartDetails from "./components/SparePartDetails";
+import Cart from "./components/Cart";
+import { CartProvider } from "./components/CartContext";
+import Delivery from "./components/Delivery";
+import CarRental from "./components/CarRental";
+import CarRentalDetails from "./components/CarRentalDetails";
+import DriverProfile from "./components/DriverProfile";
+import Reviews from "./components/Reviews";
 function App() {
   const [active,setActive]=useState('Home');
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
   return (
     <BrowserRouter>
+    <CartProvider>
     <AuthProvider isAuthenticated={isAuthenticated}>
     <Toaster/>
     <Navbar active={active} setActive={setActive}/>
@@ -37,9 +47,18 @@ function App() {
         <Route exact path="/carwashprofile" element={<CarWashProfile/>}/>
         <Route exact path="/carwash/:id" element={<CarWashDetails/>}/>
         <Route exact path="/q&a" element={<QAndA/>}/>
+        <Route exact path="/spareparts" element={<SpareParts/>}/>
+        <Route exact path="/sparepartdetails/:id" element={<SparePartDetails/>}/>
+        <Route exact path="/cart" element={<Cart/>}/>
+        <Route exact path="/delivery" element={<Delivery/>}/>
+        <Route exact path="/rent" element={<CarRental/>}/>
+        <Route exact path="/rent/:id" element={<CarRentalDetails/>}/>
+        <Route exact path="/driverprofile" element={<DriverProfile/>}/>
+        <Route exact path="/reviews" element={<Reviews/>}/>
     </Routes>
     <Footer/>
     </AuthProvider>
+    </CartProvider>
     </BrowserRouter>
   );
 }

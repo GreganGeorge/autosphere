@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import verified from '../assets/verified-vector-icon-account-verification-verification-icon_564974-1246-removebg-preview (2).png'
-
+import mech from '../assets/man-with-wrench-his-hand.png'
 
 const Alert = () => {
     const [latitude, setLatitude] = useState(null);
@@ -110,7 +110,11 @@ const Alert = () => {
     return (
         <div className='flex justify-center items-center mt-40 mb-60'>
             <div className='w-full max-w-lg'>
-                <h2 className="text-3xl font-semibold mb-6 text-center">Alert Mechanic</h2>
+                <div className='text-4xl mb-6 text-center flex gap-2 justify-center items-center'>
+                    <p className='text-gray-700'>ALERT<span className='text-gray-700 font-medium'> MECHANIC</span></p>
+                    <p className='w-8 sm:w-12 h-[1px] sm:h-[2px] bg-gray-700'></p>
+                </div>
+                <img src={mech} height={300} width={300} className='ml-32'/>
                 <button onClick={getLocation} className="mb-6 w-full px-4 py-2 text-base font-medium text-white 
                     bg-green-600 rounded-md shadow-sm hover:bg-green-700
                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">

@@ -16,37 +16,37 @@ const Footer = () => {
                     <div className="flex flex-col text-start mb-1 md:mb-0">
                         <a
                             href='/'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Home
                         </a>
                         <a
-                            href='/'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            href='/alert'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Alert
                         </a>
                         <a
-                            href='/'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            href='/spareparts'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Spare Parts
                         </a>
                         <a
-                            href='/'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            href='/carwash'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Car Wash
                         </a>
                         <a
-                            href='/'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            href='/price'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Price Prediction
                         </a>
                         <a
-                            href='/'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            href='/rent'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Car Rental
                         </a>
@@ -58,31 +58,31 @@ const Footer = () => {
                     <div className='flex flex-col text-start mb-1 md:mb-0 text-[14px]'>
                         <a
                             href='#'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Terms and Conditions
                         </a>
                         <a
                             href='#'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             License Agreement
                         </a>
                         <a
                             href='#'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Privacy Policy
                         </a>
                         <a
                             href='#'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Copyright Information
                         </a>
                         <a
                             href='#'
-                            className='block md:inline-block py-1 hover:text-gray-500'
+                            className='block md:inline-block py-1 hover:text-gray-300'
                         >
                             Cookies Policy
                         </a>
@@ -94,20 +94,20 @@ const Footer = () => {
                     <div className="flex mt-4 gap-3">
                         <a
                             href='#'
-                            className='bg-blue-600 p-1.5 rounded-sm text-white hover:text-gray-500 hover:scale-110'
+                            className='bg-blue-600 p-1.5 rounded-sm text-white hover:scale-110'
                         >
                             <FaFacebook size={18} />
                         </a>
 
                         <a
                             href='#'
-                            className='bg-pink-600 p-1.5 rounded-sm text-white hover:text-gray-500 hover:scale-110'
+                            className='bg-pink-600 p-1.5 rounded-sm text-white hover:scale-110'
                         >
                             <FaInstagram size={18} />
                         </a>
                         <a
                             href='#'
-                            className='bg-blue-600 p-1.5 rounded-sm text-white hover:text-gray-500 hover:scale-110'
+                            className='bg-blue-600 p-1.5 rounded-sm text-white hover:scale-110'
                         >
                             <FaTwitter size={18} />
                         </a>
